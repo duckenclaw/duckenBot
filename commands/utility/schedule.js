@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, ChannelType, TextChannel } = require('discord.js');
+const { SlashCommandBuilder, ChannelType } = require('discord.js');
 const schedule = require('node-schedule');
 
 module.exports = {
@@ -15,24 +15,24 @@ module.exports = {
                 .setDescription('The message to send')
                 .setRequired(true))
         .addStringOption(option => 
-            option.setName('time')
+            option.setName('datetime')
                 .setDescription('The time to send the message in YYYY-MM-DD HH:mm format')
                 .setRequired(true)),
         
     async execute(interaction) {
         const channel = interaction.options.getChannel('channel');
         const messageContent = interaction.options.getString('message');
-        const time = interaction.options.getString('time');
+        const datetime = interaction.options.getString('datetime');
 
         console.log(`Retrieved channel: ${channel.id}, type: ${channel.type}`);
         console.log('Channel object: #', channel);
-        console.log('Scheduled time:', time);
+        console.log('Scheduled time:', datetime);
 
         if (!channel || channel.type !== ChannelType.GuildText) {
             return interaction.reply({ content: 'Please select a valid text channel.', ephemeral: true });
         }
 
-        const date = new Date(time);
+        const date = new Date(datetime);
         if (isNaN(date.getTime())) {
             return interaction.reply({ content: 'Please provide a valid date and time in the format YYYY-MM-DD HH:mm.', ephemeral: true });
         }

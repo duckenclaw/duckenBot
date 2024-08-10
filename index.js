@@ -62,5 +62,9 @@ client.once(Events.ClientReady, readyClient => {
     console.log(`Ready! Logged in as ${readyClient.user.tag}`);
 });
 
+client.on(Events.ShardError, error => {
+	console.error('A websocket connection encountered an error:', error);
+});
+
 // Log in to Discord with your client's token
 client.login(token);
