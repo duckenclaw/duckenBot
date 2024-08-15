@@ -52,7 +52,7 @@ async function createTicket(interaction) {
     });
 
     // Send a confirmation message to the user
-    await interaction.reply({ content: `Your ticket has been created: #${ticketChannel}`, ephemeral: true });
+    await interaction.reply({ content: `Your ticket has been created: ${ticketChannel}`, ephemeral: true });
 
     // Send an initial message in the ticket channel
     await ticketChannel.send(`Hello ${user}, a moderator will be with you shortly. Use this channel to discuss your issue.`);

@@ -17,7 +17,22 @@ async function closeTicket(interaction) {
         return interaction.reply({ content: 'This command can only be used in a ticket channel.', ephemeral: true });
     }
 
-    await interaction.followUp({ content: 'Ticket is closing...', ephemeral: true });
-    await channel.delete();
+    // Ask for confirmation before closing the ticket
+    await interaction.reply({ content: 'Are you sure you want to close this ticket? Type "confirm" to close.', ephemeral: true });
 
+    // Create a message collector to await the user's confirmation
+    const filter = (response) => response.content.toLowerCase() === 'confirm' && response.author.id === interaction.user.id;
+    const collector = channel.createMessageCollector({ filter, time: 15000, max: 1 });
+
+    collector.on('collect', async () => {
+        // User confirmed, delete the channel
+        await interaction.followUp({ content: 'Ticket is closing...', ephemeral: true });
+        await channel.delete();
+    });
+
+    collector.on('end', (collected) => {
+        if (collected.size === 0) {
+            interaction.followUp({ content: 'Ticket close request timed out. Please try again if you still want to close the ticket.', ephemeral: true });
+        }
+    });
 }
